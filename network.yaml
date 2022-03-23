@@ -1,6 +1,6 @@
-Description: >
+Description: 
   AWS Cloud formation project to create 4 EC2 instances and load balance them with aws load balancer
-  this files contains cloud formation code for the networking part
+  this files contains cloud formation code for the networking part 
 Parameters:
   EnvironmentName:
     Description: Environment name to be used with all resources as prefix
@@ -123,7 +123,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable1
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref NatGateway1
+      NatGatewayId: !Ref NatGateway1
   PrivateRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -151,7 +151,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable2
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref NatGateway2
+      NatGatewayId: !Ref NatGateway2
   PrivateRouteTableAssociation2:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
