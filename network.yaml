@@ -1,5 +1,6 @@
 Description: >
   AWS Cloud formation project to create 4 EC2 instances and load balance them with aws load balancer
+  this files contains cloud formation code for the networking part
 Parameters:
   EnvironmentName:
     Description: Environment name to be used with all resources as prefix
@@ -181,6 +182,8 @@ Outputs:
   PrivateSubnets:
     Description: List of private subnets in the projects
     Value: !Join [",", [!Ref PrivateSubnet1, !Ref PrivateSubnet2]]
+    Export:
+      Name: !Sub ${EnvironmentName}-PrivateSubnets
   PrivateSubnet1:
     Description: Private Subnet 1 for the project
     Value: !Ref PrivateSubnet1

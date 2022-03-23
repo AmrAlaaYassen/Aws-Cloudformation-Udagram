@@ -1,0 +1,14 @@
+[
+    {
+        "ParameterKey": "EnvironmentName",
+        "ParameterValue": "AmrYassenUdagram"
+    },
+    {
+        "ParameterKey": "MachineType",
+        "ParameterValue": "t2.medium"
+    },
+    {
+        "ParameterKey": "AMIImage",
+        "ParameterValue": "ami-0e472ba40eb589f49"
+    }
+]

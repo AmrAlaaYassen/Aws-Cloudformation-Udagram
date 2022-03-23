@@ -1,0 +1,56 @@
+Description: > 
+  AWS Cloud formation project to create 4 EC2 instances and load balance them with aws load balancer
+  this file contains cloud formation code for the web servers part
+Parameters:
+  EnvironmentName:
+    Description: Environment name to be used with all resources as prefix
+    Type: String
+    Default: cloudformationProject
+  MachineType:
+    Description: Machine Type to be used for the web server 
+    Type: String
+    Default: t2.medium
+  AMIImage:
+    Description: Image to be installed on the web server machines
+    Type: String
+    Default: ami-0e472ba40eb589f49
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Allow http to client host and ssh from local only
+        VpcId:
+          Fn::ImportValue:
+            !Sub "${EnvironmentName}-VPCID"
+        SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  LBSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http To LB
+      VpcId:
+        Fn::ImportValue:
+          !Sub "${EnvironmentName-VPCID}"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
