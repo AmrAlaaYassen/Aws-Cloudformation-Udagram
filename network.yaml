@@ -1,0 +1,28 @@
+Description: >
+  AWS Cloud formation project to create 4 EC2 instances and load balance them with aws load balancer 
+Parameters:
+  EnvironmentName:
+    Description: Environment name to be used with all resources as prefix
+    Type: String
+    Default: cloudformationProject 
+  VpcCIDR:
+    Description: CIDR to be used by VPC
+    Type: String
+    Default: 10.0.0.0/16
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      Tags:
+      - Key: Name
+        Value: !Ref EnvironmentName
+Outputs: 
+  VPC:
+    Description: the created VPC for this project
+    Value: !Ref VPC
+    Export:
+      Name: !Sub ${EnvironmentName}-VPCID
