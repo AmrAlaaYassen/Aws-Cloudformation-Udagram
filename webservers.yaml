@@ -9,11 +9,10 @@ Parameters:
   MachineType:
     Description: Machine Type to be used for the web server
     Type: String
-    Default: t2.medium
+    Default: t3.medium
   AMIImage:
-    Description: Image to be installed on the web server machines
-    Type: String
-    Default: ami-0e472ba40eb589f49
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/canonical/ubuntu/server/18.04/stable/current/amd64/hvm/ebs-gp2/ami-id
 
 Resources:
   InstanceSecGroup:
@@ -24,9 +23,9 @@ Resources:
         Fn::ImportValue: !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref LoadBalancerSecGroup
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
@@ -65,8 +64,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-      - Type: forward
-        TargetGroupArn: !Ref WebServerTargetGroup
+        - Type: forward
+          TargetGroupArn: !Ref WebServerTargetGroup
       LoadBalancerArn: !Ref WebLoadBalancer
       Port: 80
       Protocol: HTTP
@@ -104,33 +103,32 @@ Resources:
     Properties:
       VPCZoneIdentifier:
         - Fn::ImportValue: !Sub "${EnvironmentName}-PrivateSubnets"
-      LaunchConfigurationName:
-        Ref: WebServerLaunchConfiguration
+      LaunchConfigurationName: !Ref WebServerLaunchConfiguration
       MinSize: "4"
       MaxSize: "4"
       TargetGroupARNs:
-        - Ref: WebServerTargetGroup
-      HealthCheckGracePeriod: 60
-      HealthCheckType: ELB
+        - !Ref WebServerTargetGroup
+
   WebServerLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-        UserData:
-          Fn::Base64: !Sub |
-            #! /bin/bash
-            apt-get update -u
-            apt-get install apache2 -y
-            systemctl start apache2.service
-            cd /var/www/html
-            eco "Udacity Demo Web Server Up and Running!" > index.html
-        ImageId: !Ref AMIImage
-        SecurityGroups:
-          - !Ref InstanceSecGroup
-        InstanceType: !Ref MachineType
-        BlockDeviceMappings:
-          - DeviceName: "/dev/sdk"
-            Ebs:
-              VolumeSize: "10"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y
+          apt-get install apache2 -y
+          systemctl start apache2.service
+          cd /var/www/html
+          echo "Udacity Demo Web Server Up and Running!" > index.html
+      ImageId: !Ref AMIImage
+      KeyName: ubuntu
+      SecurityGroups:
+        - !Ref InstanceSecGroup
+      InstanceType: !Ref MachineType
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: "10"
 Outputs:
   WebLoadBalancer:
     Description: Public URl

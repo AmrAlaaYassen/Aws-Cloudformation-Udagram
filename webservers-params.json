@@ -5,10 +5,6 @@
     },
     {
         "ParameterKey": "MachineType",
-        "ParameterValue": "t2.medium"
-    },
-    {
-        "ParameterKey": "AMIImage",
-        "ParameterValue": "ami-0e472ba40eb589f49"
-    }
+        "ParameterValue": "t2.micro"
+    } 
 ]
