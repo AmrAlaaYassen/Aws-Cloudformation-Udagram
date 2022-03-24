@@ -5,6 +5,6 @@
     },
     {
         "ParameterKey": "MachineType",
-        "ParameterValue": "t2.micro"
+        "ParameterValue": "t3.medium"
     } 
 ]
