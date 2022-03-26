@@ -121,7 +121,6 @@ Resources:
           cd /var/www/html
           echo "Udacity Demo Web Server Up and Running!" > index.html
       ImageId: !Ref AMIImage
-      KeyName: ubuntu
       SecurityGroups:
         - !Ref InstanceSecGroup
       InstanceType: !Ref MachineType

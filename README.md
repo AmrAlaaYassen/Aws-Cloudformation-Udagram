@@ -15,6 +15,8 @@
 ### Description
 In this project I deploy web servers for a highly available web app using CloudFormation
 
+[Live Preview](http://udagr-weblo-165uf8jygi6w8-1211644702.us-east-1.elb.amazonaws.com/)
+
 ### Aws Cloud Architecture
 ![Aws Cloud Architecture](AWS-Cloud-Formation-Project-Diagram.jpeg)
 
